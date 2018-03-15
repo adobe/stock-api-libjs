@@ -1118,6 +1118,7 @@ describe('StockApis', () => {
       this.resErr = '{ error: "Invalid access token", code: 10 }';
       this.contentId = 1234;
       this.license = 'STANDARD';
+      this.cceAgency = '[{"id": 1, "value" : "test" }]';
     });
 
     it('should call makeGetAjaxCall', function (done) {
@@ -1217,6 +1218,79 @@ describe('StockApis', () => {
                       });
 
       makeGetAjaxCall.restore();
+    });
+
+    it('should resolve promise with success JSON response if makePostAjaxCall returns with success', function (done) {
+      const makePostAjaxCall = sinon.stub(Utils, 'makePostAjaxCall').callsFake(
+        (url, headers) => new Promise((resolve, reject) => {
+          headers;
+          // force call to resolve
+          if (url.includes(this.config.endpoints.license)) {
+            resolve(this.resSucc);
+          } else {
+            reject(this.resErr);
+          }
+        }));
+      this.stockApis.requestLicense(
+        this.accessToken, this.contentId, this.license, this.cceAgency)
+                      .then((response) => {
+                        expect(response).to.equal(this.resSucc);
+                        done();
+                      }, (error) => {
+                        expect(error).to.not.be.ok;
+                        done();
+                      })
+                      .catch((error) => {
+                        done(error);
+                      });
+      makePostAjaxCall.restore();
+    });
+
+    it('should reject promise with error JSON if makePostAjaxCall returns with error', function (done) {
+      const makePostAjaxCall = sinon.stub(Utils, 'makePostAjaxCall').callsFake(
+        (url, headers) => new Promise((resolve, reject) => {
+          headers;
+          // force call reject
+          if (!url.includes(this.config.endpoints.license)) {
+            resolve(this.resSucc);
+          } else {
+            reject(this.resErr);
+          }
+        }));
+
+      this.stockApis.requestLicense(
+        this.accessToken, this.contentId, this.license, this.cceAgency)
+                      .then((response) => {
+                        expect(response).to.not.be.ok;
+                        done();
+                      }, (error) => {
+                        expect(error).to.equal(this.resErr);
+                        done();
+                      })
+                      .catch((error) => {
+                        done(error);
+                      });
+
+      makePostAjaxCall.restore();
+    });
+
+    it('should reject promise with error JSON if makePostAjaxCall throws error', function (done) {
+      const makePostAjaxCall = sinon.stub(Utils, 'makePostAjaxCall').throws(new TypeError('Error'));
+
+      this.stockApis.requestLicense(
+        this.accessToken, this.contentId, this.license, this.cceAgency)
+                      .then((response) => {
+                        expect(response).to.not.be.ok;
+                        done();
+                      }, (error) => {
+                        expect(error.message).to.equal('Error');
+                        done();
+                      })
+                      .catch((error) => {
+                        done(error);
+                      });
+
+      makePostAjaxCall.restore();
     });
   });
 

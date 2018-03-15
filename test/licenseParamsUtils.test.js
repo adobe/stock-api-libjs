@@ -228,4 +228,38 @@ describe('LicenseParamsUtils', () => {
       expect(testFn).to.not.throw(Error);
     });
   });
+
+  // Tests for validateReferenceData function
+  describe('validateReferenceData', () => {
+    it('should throw error cceAgency expects Array if cceAgency argument passed is not Array', () => {
+      let testFn = () => LicenseParamsUtils.validateReferenceData('test');
+      expect(testFn).to.throw(/cceAgency is not of type array/);
+
+      testFn = () => LicenseParamsUtils.validateReferenceData({});
+      expect(testFn).to.throw(/cceAgency is not of type array/);
+
+      testFn = () => LicenseParamsUtils.validateReferenceData(1234);
+      expect(testFn).to.throw(/cceAgency is not of type array/);
+    });
+
+    it('should throw error for unsupported reference Data object', () => {
+      let testFn = () => LicenseParamsUtils.validateReferenceData([{ id: '', value: 'test' }]);
+      expect(testFn).to.throw(/id missing or id is not of type Integer!/);
+
+      testFn = () => LicenseParamsUtils.validateReferenceData([{ value: 'test' }]);
+      expect(testFn).to.throw(/id missing or id is not of type Integer!/);
+
+      testFn = () => LicenseParamsUtils.validateReferenceData([{ id: {}, value: 'test' }]);
+      expect(testFn).to.throw(/id missing or id is not of type Integer!/);
+
+      testFn = () => LicenseParamsUtils.validateReferenceData([{ id: 123 }]);
+      expect(testFn).to.throw(/value missing or value is not of type string!/);
+
+      testFn = () => LicenseParamsUtils.validateReferenceData([{ id: 123, value: {} }]);
+      expect(testFn).to.throw(/value missing or value is not of type string!/);
+
+      testFn = () => LicenseParamsUtils.validateReferenceData([{ id: 123, value: [] }]);
+      expect(testFn).to.throw(/value missing or value is not of type string!/);
+    });
+  });
 });

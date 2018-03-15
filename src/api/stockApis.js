@@ -199,6 +199,20 @@ function getSearchFilesApiHttpMethod(queryParams) {
   return method;
 }
 
+/**
+ * Get the http method for the request license api call.
+ * @param {array} cceAgency
+ * @returns {string} http method
+ */
+function getRequestLicenseApiHttpMethod(cceAgency) {
+  let method = Constants.HTTPMETHOD.GET;
+  if (cceAgency) {
+    method = Constants.HTTPMETHOD.POST;
+  }
+
+  return method;
+}
+
 export default class StockApis {
   /*
    * Constructor of StockApis class
@@ -418,11 +432,13 @@ export default class StockApis {
    * @param {string} {required} accessToken to be sent with Authorization header
    * @param {integer} contentId (required) asset's unique identifer
    * @param {string} license (required) licensing state for the asset.
+   * @param {array} cceAgency (optional) Specifies license references.
    * @returns {promise} returns promise
    */
-  requestLicense(accessToken, contentId, license) {
+  requestLicense(accessToken, contentId, license, cceAgency) {
     return new Promise((onSuccess, onError) => {
       try {
+        const httpMethod = getRequestLicenseApiHttpMethod(cceAgency);
         const requestURL = createRequestLicenseApiUrl(this.config.endpoints.license
           , contentId, license);
 
@@ -433,8 +449,17 @@ export default class StockApis {
 
         headers.Authorization = `Bearer ${accessToken}`;
 
-        Utils.makeGetAjaxCall(requestURL, headers)
+        if (httpMethod === Constants.HTTPMETHOD.GET) {
+          Utils.makeGetAjaxCall(requestURL, headers)
               .then(onSuccess, onError);
+        } else {
+          const obj = {
+            cce_agency: cceAgency,
+          };
+          const postData = JSON.stringify(obj);
+          Utils.makePostAjaxCall(requestURL, headers, postData)
+              .then(onSuccess, onError);
+        }
       } catch (e) {
         onError(e);
       }

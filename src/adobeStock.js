@@ -372,17 +372,22 @@ class AdobeStock {
    * @param {string} accessToken (required) access token to be used for Authorization header
    * @param {integer} contentId (required) asset's unique identifer
    * @param {string} license (optional) licensing state for the asset.
+   * @param {array} cceAgency (optional) Specifies license references.
    * @returns {promise} promise which will give json data with license info
    * containing a download URL
    */
-  requestLicenseForContent(accessToken, contentId, license) {
+  requestLicenseForContent(accessToken, contentId, license, cceAgency) {
     if (!isAdobeStockInitialized.call(this)) {
       throw new Error('Library not initialized! Please initialize the library first.');
     }
 
     LicenseParamsUtils.validateContentLicenseParams(accessToken, contentId, license);
 
-    return this.stockApis.requestLicense(accessToken, contentId, license);
+    if (cceAgency) {
+      LicenseParamsUtils.validateReferenceData(cceAgency);
+    }
+
+    return this.stockApis.requestLicense(accessToken, contentId, license, cceAgency);
   }
 
   /**

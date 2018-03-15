@@ -300,6 +300,7 @@ This is a Javascript implementation of the various APIs provided by the Stock se
       * `accessToken` - access token to be used for Authorization header. (Required)
       * `contentId` - asset's unique identifer. (Required)
       * `license` - Adobe Stock licensing state for the asset.Takes default value `Standard` if not present.(Optional)
+      * `cceAgency` - array of license reference object.Each object contains two attributes- id and value. The license reference "id" values can be found with `accessMemberProfile` API. License references are required to be provided in enterprise accounts if account is configured to provide references. (Optional)
     * Returns:
       * Returns object of `Promise` class containing JSON data for license info with download
       URL
@@ -314,6 +315,33 @@ This is a Javascript implementation of the various APIs provided by the Stock se
       stock.requestLicenseForContent(accessToken, contentId, license).then((response) => {
         console.log(response);
       });    
+      ```
+  
+    ```
+      const accessToken = 'fdkgnio4isoknzklnvw409jknvzksnvai3289r4209tjaornuivn34nivh3jt340fjvn9304jt';
+      const contentId = 1234;
+      const license = "STANDARD";
+      const locale = "en-US";
+      const stock = new AdobeStock('Stock_Client_Api_key', 'Stock Client/1.0.0', AdobeStock.ENVIRONMENT.PROD);
+
+      var cceAgency;
+      stock.accessMemberProfile(accessToken, contentId, license, locale).then((response) => {
+        console.log(response);
+        cceAgency = response.cce_agency;
+
+        //this response object contains cce_agency array which contains license references containing "id".
+        var iterator;
+        var cceAgencyLength = response.cce_agency.length;
+        for (iterator = 0; iterator < cceAgencyLength; iterator++) {
+          cceAgency[iterator].value = "org_name";
+        }
+      
+        stock.requestLicenseForContent(accessToken, contentId, license, cceAgency).then((response) => {
+          console.log(response);
+        });    
+      });
+
+
       ```
   * `downloadAsset` - Provide the URL of the asset if already licensed.
     * Requires:

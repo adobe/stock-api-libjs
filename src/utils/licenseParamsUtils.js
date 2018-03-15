@@ -101,4 +101,24 @@ export default class LicenseParamsUtils {
     }
   }
 
+  /**
+   * function to verify the reference data for Content License API
+   * @param {array} cceAgency Specifies license references.
+   */
+  static validateReferenceData(cceAgency) {
+    if (!Utils.isArray(cceAgency)) {
+      throw new Error('cceAgency is not of type array');
+    }
+
+    cceAgency.forEach((referenceData) => {
+      if (referenceData.id == null || Utils.isInteger(referenceData.id) === false) {
+        throw new Error('id missing or id is not of type Integer!');
+      }
+
+      if (referenceData.value == null || typeof referenceData.value !== 'string') {
+        throw new Error('value missing or value is not of type string!');
+      }
+    });
+  }
+
 }
