@@ -17,7 +17,7 @@ export default class Config {
    * @param {string} product x_product header for the api calls
    * @param {ENVIRONMENT} env defines the environment for the library
    */
-  constructor(apiKey, product, env = Constants.ENVIRONMENT.STAGE) {
+  constructor(apiKey, product, env = Constants.ENVIRONMENT.PROD) {
     this.target_env = env;
 
     this.endpoints = (this.target_env === Constants.ENVIRONMENT.PROD)
