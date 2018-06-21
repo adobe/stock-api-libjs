@@ -6,6 +6,11 @@ This is a Javascript implementation of the various APIs provided by the Stock se
 ## Before You Begin
 Get a Stock API Key by [creating a Creative Cloud Adobe Stock integration on console.adobe.io](https://console.adobe.io/integrations/new).
 
+### Requirements
+
+- [node.js](https://nodejs.org) v6.3.1 or newer
+- [`yarn`](https://yarnpkg.com/en/docs/install)
+
 ### Install Dependencies
 - `yarn install`
 
