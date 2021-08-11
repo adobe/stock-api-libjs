@@ -4,7 +4,7 @@
 This is a Javascript implementation of the various APIs provided by the Stock services.
 
 ## Before You Begin
-Get a Stock API Key by [creating a Creative Cloud Adobe Stock integration on console.adobe.io](https://console.adobe.io/integrations/new).
+Check out [our Getting Started documentation](https://www.adobe.io/apis/creativecloud/stock/docs/getting-started.html). At a minimum, you'll need a Stock API Key by [creating a Creative Cloud Adobe Stock integration on console.adobe.io](https://console.adobe.io/integrations/new).
 
 ### Requirements
 
