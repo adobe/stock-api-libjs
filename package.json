@@ -39,7 +39,7 @@
     "eslint-plugin-import": "^2.2.0",
     "html-webpack-plugin": "^2.28.0",
     "istanbul": "^0.4.5",
-    "jsdom": "9.5.0",
+    "jsdom": "16.5.0",
     "jsdom-global": "2.1.0",
     "karma": "^1.6.0",
     "karma-babel-preprocessor": "^6.0.1",
